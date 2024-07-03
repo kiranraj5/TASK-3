@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Content with JavaScript</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <div class="container">
+        <h1>Welcome to Dynamic Content</h1>
+
+        <!-- Tabs -->
+        <div class="tab">
+            <button class="tablinks" onclick="openTab(event, 'Tab1')">Tab 1</button>
+            <button class="tablinks" onclick="openTab(event, 'Tab2')">Tab 2</button>
+            <button class="tablinks" onclick="openTab(event, 'Tab3')">Tab 3</button>
+        </div>
+
+        <!-- Content for Tabs -->
+        <div id="Tab1" class="tabcontent">
+            <h2>Tab 1 Content</h2>
+            <p>This is the content of Tab 1.</p>
+        </div>
+
+        <div id="Tab2" class="tabcontent">
+            <h2>Tab 2 Content</h2>
+            <p>This is the content of Tab 2.</p>
+        </div>
+
+        <div id="Tab3" class="tabcontent">
+            <h2>Tab 3 Content</h2>
+            <p>This is the content of Tab 3.</p>
+        </div>
+
+        <!-- Slider -->
+        <h2>Slider</h2>
+        <input type="range" min="1" max="100" value="50" class="slider" id="mySlider">
+        <p>Value: <span id="sliderValue">50</span></p>
+
+        <!-- Accordion -->
+        <h2>Accordion</h2>
+        <button class="accordion" onclick="toggleAccordion(event)">Section 1</button>
+        <div class="panel">
+            <p>Content for Section 1.</p>
+        </div>
+        <button class="accordion" onclick="toggleAccordion(event)">Section 2</button>
+        <div class="panel">
+            <p>Content for Section 2.</p>
+        </div>
+
+        <!-- Form with Validation -->
+        <h2>Form Validation</h2>
+        <form id="myForm" onsubmit="validateForm(event)">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+            <button type="submit">Submit</button>
+        </form>
+
+        <!-- Display Data from API -->
+        <h2>Data from API</h2>
+        <ul id="dataList"></ul>
+    </div>
+
+    <!-- JavaScript Code -->
+    <script>
+        // Function to open tab content
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+
+            // Hide all tab content
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+
+            // Deactivate all tab buttons
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+
+            // Show the specific tab content
+            document.getElementById(tabName).style.display = "block";
+            // Activate the button that opened the tab
+            evt.currentTarget.className += " active";
+        }
+
+        // Function to update slider value display
+        var slider = document.getElementById("mySlider");
+        var output = document.getElementById("sliderValue");
+        output.innerHTML = slider.value;
+
+        slider.oninput = function() {
+            output.innerHTML = this.value;
+        }
+
+        // Function to toggle accordion panels
+        function toggleAccordion(evt) {
+            var panel = evt.target.nextElementSibling;
+            if (panel.style.display === "block") {
+                panel.style.display = "none";
+            } else {
+                panel.style.display = "block";
+            }
+        }
+
+        // Function to validate form
+        function validateForm(evt) {
+            evt.preventDefault(); // Prevent form submission
+            var email = document.getElementById("email").value;
+            if (!isValidEmail(email)) {
+                alert("Invalid email address!");
+                return false;
+            }
+            alert("Form submitted successfully!");
+            // Further actions (like AJAX submit) can be added here
+        }
+
+        // Helper function to validate email format
+        function isValidEmail(email) {
+            var regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return regex.test(email);
+        }
+
+        // Function to fetch data from an API and display it
+        document.addEventListener("DOMContentLoaded", function() {
+            fetch('https://jsonplaceholder.typicode.com/posts')
+                .then(response => response.json())
+                .then(data => {
+                    var dataList = document.getElementById("dataList");
+                    data.forEach(item => {
+                        var li = document.createElement("li");
+                        li.textContent = item.title;
+                        dataList.appendChild(li);
+                    });
+                })
+                .catch(error => console.error('Error fetching data:', error));
+        });
+    </script>
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="styles.css">
+</body>
+</html>
